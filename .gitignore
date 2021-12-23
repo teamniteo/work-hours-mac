@@ -1,0 +1,17 @@
+.DS_Store
+.swiftpm/xcode/package.xcworkspace/contents.xcworkspacedata
+*.xcarchive
+*.dmg
+*.private
+*.xcresult
+/.build
+/*.xcodeproj
+/Packages
+build
+DerivedData/
+Export
+libSetapp
+SetAppExport
+SourcePackages
+xcuserdata/
+*.zip⏎
