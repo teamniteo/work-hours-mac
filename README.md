@@ -1,12 +1,12 @@
-# Track Your work Hours
+# Track Your Work Hours
 
 Simple app that tracks your works hours from status bar.
 
 Features:
 
-- Simple and private
-- Data is stored in CSV @ Ducuments folder
-- When mac goes to sleep it stops the timer
+- Simple and private.
+- Data is stored in CSV in the Documents folder.
+- When Mac goes to sleep it automatically stops the timer.
 
 Download from https://github.com/niteoweb/work-hours-mac/releases (macOS 12.0+ only atm)
 
