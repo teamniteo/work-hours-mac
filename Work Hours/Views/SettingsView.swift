@@ -5,16 +5,15 @@
 //  Created by Janez Troha on 24/12/2021.
 //
 
-import SwiftUI
 import AppKit
-
+import SwiftUI
 
 struct SettingsView: View {
     @State var selected: Tabs
     enum Tabs: Hashable {
         case general, about
     }
-    
+
     var body: some View {
         TabView(selection: $selected) {
             GeneralSettingsView()
@@ -29,7 +28,6 @@ struct SettingsView: View {
                 .tag(Tabs.about)
         }
     }
-    
 }
 
 struct SettingsView_Previews: PreviewProvider {

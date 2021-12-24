@@ -10,21 +10,20 @@ extension Date {
     static func - (lhs: Date, rhs: Date) -> TimeInterval {
         return lhs.timeIntervalSinceReferenceDate - rhs.timeIntervalSinceReferenceDate
     }
-    
 
-        init(dateString:String) {
-            self = Date.iso8601Formatter.date(from: dateString)!
-        }
-        
-        static let iso8601Formatter: ISO8601DateFormatter = {
-            let formatter = ISO8601DateFormatter()
-            formatter.formatOptions = [.withFullDate,
-                                       .withTime,
-                                       .withDashSeparatorInDate,
-                                       .withColonSeparatorInTime]
-            return formatter
-        }()
-    
+    init(dateString: String) {
+        self = Date.iso8601Formatter.date(from: dateString)!
+    }
+
+    static let iso8601Formatter: ISO8601DateFormatter = {
+        let formatter = ISO8601DateFormatter()
+        formatter.formatOptions = [.withFullDate,
+                                   .withTime,
+                                   .withDashSeparatorInDate,
+                                   .withColonSeparatorInTime]
+        return formatter
+    }()
+
     static let RFC3339DateFormatter: DateFormatter = {
         let RFC3339DateFormatter = DateFormatter()
         RFC3339DateFormatter.locale = Locale(identifier: "en_US_POSIX")
@@ -32,7 +31,7 @@ extension Date {
         RFC3339DateFormatter.timeZone = TimeZone(secondsFromGMT: 0)
         return RFC3339DateFormatter
     }()
-    
+
     static let YearMonthFormatter: DateFormatter = {
         let YearMonthFormatter = DateFormatter()
         YearMonthFormatter.locale = Locale(identifier: "en_US_POSIX")
@@ -40,6 +39,7 @@ extension Date {
         YearMonthFormatter.timeZone = TimeZone(secondsFromGMT: 0)
         return YearMonthFormatter
     }()
+
     static let YearMonthDayFormatter: DateFormatter = {
         let YearMonthFormatter = DateFormatter()
         YearMonthFormatter.locale = Locale(identifier: "en_US_POSIX")
@@ -47,7 +47,6 @@ extension Date {
         YearMonthFormatter.timeZone = TimeZone(secondsFromGMT: 0)
         return YearMonthFormatter
     }()
-    
 }
 
 extension TimeInterval {
@@ -58,11 +57,11 @@ extension TimeInterval {
 
         return String(format: "%0.2d:%0.2d", hours, minutes)
     }
-    
+
     static func hoursAndMinutes(_ diff: Int) -> String {
         let minutes = (diff / 60) % 60
         let hours = (diff / 3600)
-        
+
         return String(format: "%0.2dh %0.2dm", hours, minutes)
     }
 }

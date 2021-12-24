@@ -11,29 +11,27 @@ import SwiftUI
 
 typealias Scheduler = NSBackgroundActivityScheduler
 
-
 class StatusBarController: NSObject, NSMenuDelegate {
     var statusItem: NSStatusItem!
     var statusItemMenu: NSMenu!
     var timerModel = TimerModel()
 
-     func addSubmenu(withTitle: String, action: Selector?) -> NSMenuItem {
+    func addSubmenu(withTitle: String, action: Selector?) -> NSMenuItem {
         let item = NSMenuItem(title: withTitle, action: action, keyEquivalent: "")
         item.target = self
         return item
     }
-     func fromReports(_ reports: [Report])-> NSMenu{
+
+    func fromReports(_ reports: [Report]) -> NSMenu {
         let submenu = NSMenu()
         for report in reports {
             submenu.addItem(addSubmenu(withTitle: "\(report.timestamp) worked \(report.amount)", action: #selector(copyToPasteboard)))
         }
         return submenu
     }
-    
-    @objc func copyToPasteboard() {
-        
-    }
-    
+
+    @objc func copyToPasteboard() {}
+
     override
     init() {
         super.init()
@@ -78,9 +76,7 @@ class StatusBarController: NSObject, NSMenuDelegate {
         addApplicationItems()
     }
 
-    func menuDidClose(_: NSMenu) {
-
-    }
+    func menuDidClose(_: NSMenu) {}
 
     func menuWillOpen(_: NSMenu) {
         updateMenu()
@@ -94,7 +90,6 @@ class StatusBarController: NSObject, NSMenuDelegate {
         }
     }
 
-
     func addApplicationItems() {
         if !timerModel.isRunning {
             let startItem = NSMenuItem(title: "Start Work", action: #selector(toggle), keyEquivalent: "s")
@@ -104,7 +99,7 @@ class StatusBarController: NSObject, NSMenuDelegate {
         } else {
             let changeStart = NSMenuItem(title: "Change Start Time", action: #selector(toggle), keyEquivalent: "c")
             changeStart.target = self
-            //statusItemMenu.addItem(changeStart)
+            // statusItemMenu.addItem(changeStart)
 
             let stopItem = NSMenuItem(title: "Stop Work", action: #selector(toggle), keyEquivalent: "s")
             stopItem.target = self
@@ -114,14 +109,14 @@ class StatusBarController: NSObject, NSMenuDelegate {
         statusItemMenu.addItem(NSMenuItem.separator())
 
         let dailyItem = NSMenuItem(title: "Daily Reports", action: nil, keyEquivalent: "")
-        if let dailyReports = Events.generateReport(formatter: Date.YearMonthDayFormatter){
-            dailyItem.submenu = fromReports(dailyReports)
+        if let dailyReports = Events.generateReport(formatter: Date.YearMonthDayFormatter) {
+            dailyItem.submenu = fromReports(dailyReports.sorted(by: { $0.timestamp < $1.timestamp }).suffix(7))
         }
         statusItemMenu.addItem(dailyItem)
 
         let monthlyItem = NSMenuItem(title: "Monthly Reports", action: nil, keyEquivalent: "")
-        if let monthlyReports = Events.generateReport(formatter: Date.YearMonthFormatter){
-            monthlyItem.submenu = fromReports(monthlyReports)
+        if let monthlyReports = Events.generateReport(formatter: Date.YearMonthFormatter) {
+            monthlyItem.submenu = fromReports(monthlyReports.sorted(by: { $0.timestamp < $1.timestamp }))
         }
         statusItemMenu.addItem(monthlyItem)
 

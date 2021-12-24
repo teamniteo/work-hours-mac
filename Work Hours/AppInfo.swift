@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import Foundation
 import os.log
 import SwiftUI
 
@@ -19,5 +18,4 @@ enum AppInfo {
     static var isRunningTests: Bool {
         ProcessInfo.processInfo.arguments.contains("isRunningTests") || ProcessInfo.processInfo.environment["CI"] ?? "false" != "false"
     }
-   
 }

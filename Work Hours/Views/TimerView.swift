@@ -5,11 +5,13 @@
 //  Created by Janez Troha on 19/12/2021.
 //
 
+import Defaults
 import SwiftUI
 
 struct TimerView: View {
     @ObservedObject var timerModel: TimerModel
     @Environment(\.colorScheme) var colorScheme
+    @Default(.statusBarIcon) var statusBarIcon
 
     var body: some View {
         if timerModel.isRunning {
@@ -27,7 +29,7 @@ struct TimerView: View {
         } else {
             ZStack {
                 // Moves in from leading out, out to trailing edge.
-                Image(systemName: "lanyardcard.fill")
+                Image(systemName: statusBarIcon)
                     .resizable()
                     .opacity(0.9)
                     .frame(width: 16, height: 16, alignment: .center)

@@ -8,8 +8,25 @@
 import SwiftUI
 
 import Cocoa
+import Defaults
 import os.log
 import SwiftUI
+
+extension NSWorkspace {
+    static func onWakeup(_ fn: @escaping (Notification) -> Void) {
+        NSWorkspace.shared.notificationCenter.addObserver(forName: NSWorkspace.didWakeNotification,
+                                                          object: nil,
+                                                          queue: nil,
+                                                          using: fn)
+    }
+
+    static func onSleep(_ fn: @escaping (Notification) -> Void) {
+        NSWorkspace.shared.notificationCenter.addObserver(forName: NSWorkspace.willSleepNotification,
+                                                          object: nil,
+                                                          queue: nil,
+                                                          using: fn)
+    }
+}
 
 class AppDelegate: NSObject, NSApplicationDelegate {
     var welcomeWindow: NSWindow?
@@ -25,6 +42,12 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
         statusBar = StatusBarController()
         statusBar?.updateMenu()
+
+        NSWorkspace.onSleep { _ in
+            if Defaults[.stopOnSleep] {
+                self.statusBar?.timerModel.stop()
+            }
+        }
     }
 
     func application(_: NSApplication, open urls: [URL]) {

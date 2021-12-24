@@ -10,9 +10,6 @@ import Foundation
 import os.log
 import SwiftCSV
 
-
-
-
 class TimerModel: ObservableObject {
     @Published var display: String = "00:00"
     @Published var isRunning: Bool

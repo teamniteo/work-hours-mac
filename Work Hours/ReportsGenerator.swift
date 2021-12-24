@@ -18,8 +18,8 @@ enum Action: String {
 struct Report {
     let timestamp: String
     let amount: String
-    
-    static func fromData(_ data: [String:Int])->[Report]{
+
+    static func fromData(_ data: [String: Int]) -> [Report] {
         var reports = [Report]()
         for (ts, duration) in data {
             reports.append(Report(timestamp: ts, amount: TimeInterval.hoursAndMinutes(duration)))
@@ -27,7 +27,6 @@ struct Report {
         return reports
     }
 }
-
 
 enum Events {
     static var logFile: URL? {
@@ -42,14 +41,14 @@ enum Events {
         }
         return FileManager.documentDirectoryURL.appendingPathComponent("MyWorkHours").appendingPathComponent("log.csv")
     }
-    
+
     static func write(_ action: Action, _ timestamp: Date) {
         guard let logFile = logFile else {
             return
         }
-        
+
         let data = "\(action.rawValue),\(timestamp.ISO8601Format())\n"
-        
+
         if FileManager.default.fileExists(atPath: logFile.path) {
             os_log("Appending %s to %s", data, logFile.path)
             if let fileHandle = try? FileHandle(forWritingTo: logFile.absoluteURL) {
@@ -62,15 +61,15 @@ enum Events {
             try? "action,timestamp\n\(data)".write(to: logFile.absoluteURL, atomically: true, encoding: .utf8)
         }
     }
-    
+
     // Restore last state from event source
     static func isRunning() -> Date? {
         guard let logFile = logFile else {
             return nil
         }
-        
+
         if FileManager.default.fileExists(atPath: logFile.path) {
-            guard let csvFile: CSV = try? CSV(url: logFile, loadColumns:false) else {
+            guard let csvFile: CSV = try? CSV(url: logFile, loadColumns: false) else {
                 return nil
             }
             guard let lastLine = csvFile.enumeratedRows.last else {
@@ -81,14 +80,12 @@ enum Events {
                 return Date(dateString: timestamp)
             }
             return nil
-            
         }
-            return nil
-        
+        return nil
     }
-    
+
     static func generateReport(formatter: DateFormatter) -> [Report]? {
-        var data:[String:Int] = [:]
+        var data: [String: Int] = [:]
         guard let logFile = logFile else {
             return nil
         }
@@ -108,28 +105,27 @@ enum Events {
                     os_log("Unknown line %s", line)
                     return nil
                 }
-                
+
                 // corrupted data
                 if startTimestamp != nil, endTimestamp != nil {
                     // same day, TODO: remove once we are ok with current state of parsing
-                    //if formatter.string(from: startTimestamp!) == formatter.string(from: endTimestamp!) {
-                        let elapsed = Int(endTimestamp!.timeIntervalSince(startTimestamp!))
-                        let key = formatter.string(from: startTimestamp!)
-                        if let val = data[key] {
-                            data[key] = elapsed + val
-                        }else{
-                            data[key] = elapsed
-                        }
-                        startTimestamp = nil
-                        endTimestamp = nil
-                    //}else {
+                    // if formatter.string(from: startTimestamp!) == formatter.string(from: endTimestamp!) {
+                    let elapsed = Int(endTimestamp!.timeIntervalSince(startTimestamp!))
+                    let key = formatter.string(from: startTimestamp!)
+                    if let val = data[key] {
+                        data[key] = elapsed + val
+                    } else {
+                        data[key] = elapsed
+                    }
+                    startTimestamp = nil
+                    endTimestamp = nil
+                    // }else {
                     //    return nil
-                    //}
+                    // }
                 }
             }
             return Report.fromData(data)
         }
         return nil
-        
     }
 }
