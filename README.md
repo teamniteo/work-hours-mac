@@ -8,7 +8,7 @@ Features:
 - Data is stored in CSV @ Ducuments folder
 - When mac goes to sleep it stops the timer
 
-Download from https://github.com/niteoweb/work-hours-mac/releases 
+Download from https://github.com/niteoweb/work-hours-mac/releases (12.0+ only atm)
 
 ## Preview
 
