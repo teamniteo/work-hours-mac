@@ -1,6 +1,7 @@
 # Track Your Work Hours
 
 Simple app that tracks your works hours from status bar.
+![image](https://user-images.githubusercontent.com/239513/147464361-3ad6793c-5846-4eb1-b50f-2fc6bc38803d.png)
 
 Features:
 
@@ -8,12 +9,4 @@ Features:
 - Data is stored in CSV in the Documents folder.
 - When Mac goes to sleep it automatically stops the timer.
 
-Download from https://github.com/niteoweb/work-hours-mac/releases (macOS 12.0+ only atm)
-
-## Preview
-
-https://user-images.githubusercontent.com/239513/147300827-2c3d5fe2-ef19-4f68-8142-941fb346ec9b.mov
-
-![image](https://user-images.githubusercontent.com/239513/147346100-bed5fdde-df06-4367-b932-ca53454e305e.png)
-
-
+Download from https://github.com/niteoweb/work-hours-mac/releases (macOS 11.0+ only atm)
