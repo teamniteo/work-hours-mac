@@ -18,4 +18,5 @@ enum StatusBarIcon: String {
 extension Defaults.Keys {
     static let statusBarIcon = Key<String>("statusBarIcon", default: StatusBarIcon.deskclock.rawValue)
     static let stopOnSleep = Key<Bool>("stopOnSleep", default: true)
+    static let hideBackground = Key<Bool>("hideBackground", default: false)
 }

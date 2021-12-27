@@ -51,7 +51,7 @@ enum Events {
             return
         }
 
-        let data = "\(action.rawValue),\(timestamp.ISO8601Format())\n"
+        let data = "\(action.rawValue),\(Date.ISO8601DateFormatter.string(from: timestamp))\n"
 
         if FileManager.default.fileExists(atPath: logFile.path) {
             os_log("Appending %s to %s", data, logFile.path)
