@@ -12,20 +12,30 @@ struct TimerView: View {
     @ObservedObject var timerModel: TimerModel
     @Environment(\.colorScheme) var colorScheme
     @Default(.statusBarIcon) var statusBarIcon
-
+    @Default(.hideBackground) var hideBackground
+    
     var body: some View {
         if timerModel.isRunning {
             ZStack {
-                Text(timerModel.display)
-                    .foregroundColor(.black.opacity(0.8))
-                    .font(.callout)
-                    .multilineTextAlignment(.center)
-                    .padding(.horizontal, 4.0)
-                    .padding(.vertical, 1.0)
-                    .background(.white.opacity(0.8))
-                    .cornerRadius(15)
+                if #available(macOS 12.0, *){
+                    Text(timerModel.display)
+                        .foregroundColor(.black.opacity(0.8))
+                        .font(.headline)
+                        .multilineTextAlignment(.center)
+                        .padding(.horizontal, 4.0)
+                        .padding(.vertical, 1.0)
+                        .background(.white.opacity(0.8))
+                        .cornerRadius(15)
+                } else {
+                    Text(timerModel.display)
+                        .font(.headline)
+                        .multilineTextAlignment(.center)
+                        .padding(.horizontal, 4.0)
+                        .padding(.vertical, 1.0)
+                        .cornerRadius(15)
+                }
 
-            }.frame(minWidth: 46, idealHeight: 16, alignment: .center).padding(.horizontal, 4.0).padding(.top, 3.0).padding(.bottom, 3.0).transition(.slide)
+            }.frame(minWidth: 50, idealHeight: 16, alignment: .center).padding(.horizontal, 4.0).padding(.top, 3.0).padding(.bottom, 3.0).transition(.slide)
         } else {
             ZStack {
                 // Moves in from leading out, out to trailing edge.

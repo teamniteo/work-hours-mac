@@ -20,7 +20,7 @@ class TimerModel: ObservableObject {
         isRunning = Events.isRunning() != nil
         if isRunning {
             startTime = Events.isRunning()
-            os_log("Setting time to: %s", startTime.ISO8601Format())
+            os_log("Setting time to: %s", startTime.description)
             update()
         }
     }
