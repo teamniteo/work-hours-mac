@@ -1,6 +1,7 @@
 # Track Your Work Hours
 
 Simple app that tracks your works hours from status bar.
+
 ![image](https://user-images.githubusercontent.com/239513/147464361-3ad6793c-5846-4eb1-b50f-2fc6bc38803d.png)
 
 Features:
