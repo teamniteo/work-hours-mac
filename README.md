@@ -11,3 +11,8 @@ Features:
 - When Mac goes to sleep it automatically stops the timer.
 
 Download from https://github.com/niteoweb/work-hours-mac/releases (macOS 11.0+ only)
+
+
+## Behind the curtain 
+
+App uses Event Sourcing via CSV file https://www.youtube.com/watch?v=rUDN40rdly8
