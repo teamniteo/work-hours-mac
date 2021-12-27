@@ -22,6 +22,10 @@ struct Report {
     static func fromData(_ data: [String: Int]) -> [Report] {
         var reports = [Report]()
         for (ts, duration) in data {
+            // skip if less than a minute
+            if duration < 60 {
+                continue
+            }
             reports.append(Report(timestamp: ts, amount: TimeInterval.hoursAndMinutes(duration)))
         }
         return reports
@@ -95,7 +99,26 @@ enum Events {
             }
             var startTimestamp: Date?
             var endTimestamp: Date?
+            var prevEvent: String?
+
             for line in csvFile.enumeratedRows {
+                // XOR for event filtering, when there is data corruption
+                if prevEvent == nil {
+                    prevEvent = line[0]
+                } else {
+                    // Ignore if we have same event multiple times
+                    if prevEvent == Action.start.rawValue, line[0] == Action.start.rawValue {
+                        os_log("Duplicate start, skipping")
+                        continue
+                    }
+                    if prevEvent == Action.stop.rawValue, line[0] == Action.stop.rawValue {
+                        os_log("Duplicate stop, skipping")
+                        continue
+                    }
+                    // update last event
+                    prevEvent = line[0]
+                }
+
                 switch line[0] {
                 case Action.start.rawValue:
                     startTimestamp = Date(dateString: line[1])

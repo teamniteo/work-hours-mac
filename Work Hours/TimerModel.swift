@@ -26,17 +26,21 @@ class TimerModel: ObservableObject {
     }
 
     func stop() {
-        endTime = Date()
-        isRunning = false
-        Events.write(Action.stop, endTime)
-        update()
+        if Events.isRunning() != nil {
+            endTime = Date()
+            isRunning = false
+            Events.write(Action.stop, endTime)
+            update()
+        }
     }
 
     func start() {
-        startTime = Date()
-        isRunning = true
-        Events.write(Action.start, startTime)
-        update()
+        if Events.isRunning() == nil {
+            startTime = Date()
+            isRunning = true
+            Events.write(Action.start, startTime)
+            update()
+        }
     }
 
     func update() {
