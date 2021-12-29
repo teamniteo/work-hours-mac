@@ -44,7 +44,7 @@ class TimerModel: ObservableObject {
     }
 
     func update() {
-        if isRunning, startTime != nil {
+        if startTime != nil {
             let diff = Date() - startTime
             display = diff.hoursAndMinutes()
         }

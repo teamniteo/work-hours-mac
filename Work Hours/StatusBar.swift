@@ -24,8 +24,16 @@ class StatusBarController: NSObject, NSMenuDelegate {
 
     func fromReports(_ reports: [Report]) -> NSMenu {
         let submenu = NSMenu()
-        for report in reports {
+        for report in reports.sorted(by: { $0.timestamp > $1.timestamp }) {
             submenu.addItem(addSubmenu(withTitle: "\(report.timestamp) worked \(report.amount)", action: #selector(copyToPasteboard)))
+        }
+        return submenu
+    }
+
+    func fromReportsToday(_ reports: [Report]) -> NSMenu {
+        let submenu = NSMenu()
+        for report in reports.sorted(by: { $0.timestamp > $1.timestamp }) {
+            submenu.addItem(addSubmenu(withTitle: "Started \(report.timestamp) worked \(report.amount)", action: #selector(copyToPasteboard)))
         }
         return submenu
     }
@@ -76,10 +84,13 @@ class StatusBarController: NSObject, NSMenuDelegate {
         addApplicationItems()
     }
 
-    func menuDidClose(_: NSMenu) {}
+    func menuDidClose(_: NSMenu) {
+        timerModel.update()
+    }
 
     func menuWillOpen(_: NSMenu) {
         updateMenu()
+        timerModel.update()
     }
 
     @objc func toggle() {
@@ -107,20 +118,28 @@ class StatusBarController: NSObject, NSMenuDelegate {
         }
 
         statusItemMenu.addItem(NSMenuItem.separator())
+        if let events = Events.getEvents(), events.count > 0 {
+            let todayItem = NSMenuItem(title: "Today", action: nil, keyEquivalent: "")
+            if let todayReports = Events.generateReport(events: events.filter {
+                Calendar.current.isDateInToday($0.startTimestamp) && Calendar.current.isDateInToday($0.endTimestamp)
+            }, formatter: Date.HourMinutesFormatter) {
+                todayItem.submenu = fromReportsToday(todayReports)
+            }
+            statusItemMenu.addItem(todayItem)
 
-        let dailyItem = NSMenuItem(title: "Daily Reports", action: nil, keyEquivalent: "")
-        if let dailyReports = Events.generateReport(formatter: Date.YearMonthDayFormatter) {
-            dailyItem.submenu = fromReports(dailyReports.sorted(by: { $0.timestamp < $1.timestamp }).suffix(7))
+            let dailyItem = NSMenuItem(title: "Daily Reports", action: nil, keyEquivalent: "")
+            if let dailyReports = Events.generateReport(events: events, formatter: Date.YearMonthDayFormatter) {
+                dailyItem.submenu = fromReports(dailyReports.suffix(7))
+            }
+            statusItemMenu.addItem(dailyItem)
+
+            let monthlyItem = NSMenuItem(title: "Monthly Reports", action: nil, keyEquivalent: "")
+            if let monthlyReports = Events.generateReport(events: events, formatter: Date.YearMonthFormatter) {
+                monthlyItem.submenu = fromReports(monthlyReports.suffix(12))
+            }
+            statusItemMenu.addItem(monthlyItem)
+            statusItemMenu.addItem(NSMenuItem.separator())
         }
-        statusItemMenu.addItem(dailyItem)
-
-        let monthlyItem = NSMenuItem(title: "Monthly Reports", action: nil, keyEquivalent: "")
-        if let monthlyReports = Events.generateReport(formatter: Date.YearMonthFormatter) {
-            monthlyItem.submenu = fromReports(monthlyReports.sorted(by: { $0.timestamp < $1.timestamp }))
-        }
-        statusItemMenu.addItem(monthlyItem)
-
-        statusItemMenu.addItem(NSMenuItem.separator())
 
         let preferencesItem = NSMenuItem(title: "Preferences", action: #selector(AppDelegate.showPrefs), keyEquivalent: ",")
         preferencesItem.target = NSApp.delegate

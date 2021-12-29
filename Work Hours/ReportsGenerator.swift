@@ -21,14 +21,23 @@ struct Report {
 
     static func fromData(_ data: [String: Int]) -> [Report] {
         var reports = [Report]()
-        for (ts, duration) in data {
+        for (timestamp, duration) in data {
             // skip if less than a minute
             if duration < 60 {
                 continue
             }
-            reports.append(Report(timestamp: ts, amount: TimeInterval.hoursAndMinutes(duration)))
+            reports.append(Report(timestamp: timestamp, amount: TimeInterval.hoursAndMinutes(duration)))
         }
-        return reports
+        return reports.sorted(by: { $0.timestamp < $1.timestamp })
+    }
+}
+
+struct Event {
+    let startTimestamp: Date
+    let endTimestamp: Date
+
+    var elapsedSeconds: Int {
+        Int(endTimestamp.timeIntervalSince(startTimestamp))
     }
 }
 
@@ -88,21 +97,38 @@ enum Events {
         return nil
     }
 
-    static func generateReport(formatter: DateFormatter) -> [Report]? {
+    static func generateReport(events: [Event], formatter: DateFormatter) -> [Report]? {
         os_log("Start, generateReport")
         var data: [String: Int] = [:]
+        for event in events {
+            let key = formatter.string(from: event.startTimestamp)
+            os_log("Elapsed %s, %s > %d", event.startTimestamp.debugDescription, event.endTimestamp.debugDescription, event.elapsedSeconds)
+            if let val = data[key] {
+                data[key] = event.elapsedSeconds + val
+            } else {
+                data[key] = event.elapsedSeconds
+            }
+        }
+        return Report.fromData(data)
+    }
+
+    static func getEvents() -> [Event]? {
+        os_log("Start, getEvents")
+
+        var events = [Event]()
+
         guard let logFile = logFile else {
             return nil
         }
         if FileManager.default.fileExists(atPath: logFile.path) {
-            guard let csvFile: CSV = try? CSV(url: logFile) else {
+            guard let CSVFile: CSV = try? CSV(url: logFile) else {
                 return nil
             }
             var startTimestamp: Date?
             var endTimestamp: Date?
             var prevEvent: String?
 
-            for line in csvFile.enumeratedRows {
+            for line in CSVFile.enumeratedRows {
                 // XOR for event filtering, when there is data corruption
                 if prevEvent == nil {
                     prevEvent = line[0]
@@ -130,26 +156,14 @@ enum Events {
                     return nil
                 }
 
-                // corrupted data
+                // Got both actions
                 if startTimestamp != nil, endTimestamp != nil {
-                    // same day, TODO: remove once we are ok with current state of parsing
-                    // if formatter.string(from: startTimestamp!) == formatter.string(from: endTimestamp!) {
-                    let elapsed = Int(endTimestamp!.timeIntervalSince(startTimestamp!))
-                    let key = formatter.string(from: startTimestamp!)
-                    os_log("Elapsed %s, %s > %d", startTimestamp!.debugDescription, endTimestamp!.debugDescription, elapsed)
-                    if let val = data[key] {
-                        data[key] = elapsed + val
-                    } else {
-                        data[key] = elapsed
-                    }
+                    events.append(Event(startTimestamp: startTimestamp!, endTimestamp: endTimestamp!))
                     startTimestamp = nil
                     endTimestamp = nil
-                    // }else {
-                    //    return nil
-                    // }
                 }
             }
-            return Report.fromData(data)
+            return events
         }
         return nil
     }

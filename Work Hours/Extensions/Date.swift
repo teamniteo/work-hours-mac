@@ -50,6 +50,14 @@ extension Date {
         YearMonthFormatter.timeZone = TimeZone(secondsFromGMT: 0)
         return YearMonthFormatter
     }()
+
+    static let HourMinutesFormatter: DateFormatter = {
+        let YearMonthFormatter = DateFormatter()
+        YearMonthFormatter.locale = Locale(identifier: "en_US_POSIX")
+        YearMonthFormatter.dateFormat = "HH:mm"
+        YearMonthFormatter.timeZone = TimeZone(secondsFromGMT: 0)
+        return YearMonthFormatter
+    }()
 }
 
 extension TimeInterval {
