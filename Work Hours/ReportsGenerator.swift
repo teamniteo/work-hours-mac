@@ -89,7 +89,6 @@ enum Events {
     }
 
     static func generateReport(formatter: DateFormatter) -> [Report]? {
-        
         os_log("Start, generateReport")
         var data: [String: Int] = [:]
         guard let logFile = logFile else {

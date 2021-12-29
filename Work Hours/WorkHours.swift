@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+import AppUpdater
 import Cocoa
 import Defaults
 import os.log
@@ -32,6 +33,13 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     var welcomeWindow: NSWindow?
     var statusBar: StatusBarController?
 
+    static let updater = GithubAppUpdater(
+        updateURL: "https://api.github.com/repos/niteoweb/work-hours-mac/releases",
+        allowPrereleases: false,
+        autoGuard: true,
+        interval: 60 * 60
+    )
+
     func applicationWillFinishLaunching(_: Notification) {}
 
     func applicationDidFinishLaunching(_: Notification) {
@@ -47,6 +55,10 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             if Defaults[.stopOnSleep] {
                 self.statusBar?.timerModel.stop()
             }
+        }
+
+        DispatchQueue.main.async {
+            _ = AppDelegate.updater.checkAndUpdate()
         }
     }
 

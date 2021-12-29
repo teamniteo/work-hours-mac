@@ -13,11 +13,11 @@ struct TimerView: View {
     @Environment(\.colorScheme) var colorScheme
     @Default(.statusBarIcon) var statusBarIcon
     @Default(.hideBackground) var hideBackground
-    
+
     var body: some View {
         if timerModel.isRunning {
             ZStack {
-                if #available(macOS 12.0, *){
+                if #available(macOS 12.0, *) {
                     Text(timerModel.display)
                         .foregroundColor(.black.opacity(0.8))
                         .font(.headline)
