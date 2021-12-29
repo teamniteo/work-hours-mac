@@ -89,6 +89,8 @@ enum Events {
     }
 
     static func generateReport(formatter: DateFormatter) -> [Report]? {
+        
+        os_log("Start, generateReport")
         var data: [String: Int] = [:]
         guard let logFile = logFile else {
             return nil
@@ -135,6 +137,7 @@ enum Events {
                     // if formatter.string(from: startTimestamp!) == formatter.string(from: endTimestamp!) {
                     let elapsed = Int(endTimestamp!.timeIntervalSince(startTimestamp!))
                     let key = formatter.string(from: startTimestamp!)
+                    os_log("Elapsed %s, %s > %d", startTimestamp!.debugDescription, endTimestamp!.debugDescription, elapsed)
                     if let val = data[key] {
                         data[key] = elapsed + val
                     } else {
