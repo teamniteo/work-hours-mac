@@ -35,7 +35,7 @@ struct TimerView: View {
                         .cornerRadius(15)
                 }
 
-            }.frame(minWidth: 50, idealHeight: 16, alignment: .center).padding(.horizontal, 4.0).padding(.top, 3.0).padding(.bottom, 3.0).transition(.slide)
+            }.frame(minWidth: 50, idealHeight: 16, alignment: .center).padding(.horizontal, 10.0).padding(.top, 3.0).padding(.bottom, 3.0).transition(.slide)
         } else {
             ZStack {
                 // Moves in from leading out, out to trailing edge.
@@ -44,7 +44,7 @@ struct TimerView: View {
                     .opacity(0.9)
                     .frame(width: 16, height: 16, alignment: .center)
 
-            }.frame(width: 16, height: 16, alignment: .center).padding(.horizontal, 4.0)
+            }.frame(width: 16, height: 16, alignment: .center).padding(.horizontal, 10.0)
                 .padding(.vertical, 2.0)
         }
     }

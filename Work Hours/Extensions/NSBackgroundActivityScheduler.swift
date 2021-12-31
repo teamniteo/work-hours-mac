@@ -13,7 +13,7 @@ extension NSBackgroundActivityScheduler {
         activity.repeats = true
         activity.interval = withInterval
         activity.qualityOfService = .userInteractive
-        activity.tolerance = TimeInterval(1)
+        activity.tolerance = TimeInterval(10)
         activity.schedule { (completion: NSBackgroundActivityScheduler.CompletionHandler) in
             fn(completion)
         }
