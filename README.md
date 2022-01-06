@@ -11,7 +11,7 @@ Features:
 - Daily and monthly reports
 - When Mac goes to sleep it automatically stops the timer.
 
-Download from https://github.com/niteoweb/work-hours-mac/releases (macOS 11.0+ only)
+Download from https://github.com/teamniteo/work-hours-mac/releases (macOS 11.0+ only)
 
 
 ## Behind the curtain 
