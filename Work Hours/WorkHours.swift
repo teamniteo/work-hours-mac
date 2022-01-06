@@ -34,7 +34,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     var statusBar: StatusBarController?
 
     static let updater = GithubAppUpdater(
-        updateURL: "https://api.github.com/repos/niteoweb/work-hours-mac/releases",
+        updateURL: "https://api.github.com/repos/teamniteo/work-hours-mac/releases",
         allowPrereleases: false,
         autoGuard: true,
         interval: 60 * 60
