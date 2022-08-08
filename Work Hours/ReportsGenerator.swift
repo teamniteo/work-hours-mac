@@ -10,6 +10,19 @@ import Foundation
 import os.log
 import SwiftCSV
 
+extension Date {
+    func convertToLocalTime(fromTimeZone timeZoneAbbreviation: String) -> Date? {
+        if let timeZone = TimeZone(abbreviation: timeZoneAbbreviation) {
+            let targetOffset = TimeInterval(timeZone.secondsFromGMT(for: self))
+            let localOffset = TimeInterval(TimeZone.autoupdatingCurrent.secondsFromGMT(for: self))
+
+            return addingTimeInterval(targetOffset + localOffset)
+        }
+
+        return nil
+    }
+}
+
 enum Action: String {
     case start = "START"
     case stop = "END"
@@ -26,6 +39,7 @@ struct Report {
             if duration < 60 {
                 continue
             }
+
             reports.append(Report(timestamp: timestamp, amount: TimeInterval.hoursAndMinutes(duration)))
         }
         return reports.sorted(by: { $0.timestamp < $1.timestamp })
@@ -148,9 +162,9 @@ enum Events {
 
                 switch line[0] {
                 case Action.start.rawValue:
-                    startTimestamp = Date(dateString: line[1])
+                    startTimestamp = Date(dateString: line[1]).convertToLocalTime(fromTimeZone: "UTC")
                 case Action.stop.rawValue:
-                    endTimestamp = Date(dateString: line[1])
+                    endTimestamp = Date(dateString: line[1]).convertToLocalTime(fromTimeZone: "UTC")
                 default:
                     os_log("Unknown line %s", line)
                     return nil
