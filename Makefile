@@ -1,3 +1,6 @@
+project:
+	mint run xcodegen --spec xcodegen.yml
+
 test:
 	xcodebuild -project "Work Hours.xcodeproj" -clonedSourcePackagesDirPath SourcePackages -scheme "Work Hours" -configuration Debug -resultBundlePath test.xcresult -destination platform=macOS test 
 
