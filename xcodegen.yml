@@ -1,0 +1,34 @@
+name: Work Hours
+options:
+  bundleIdPrefix: com.teamniteo
+packages:
+  AppUpdater:
+    url: https://github.com/teamniteo/AppUpdater
+    branch: master
+  Defaults:
+    url: https://github.com/sindresorhus/Defaults
+    from: 7.2.0
+  LaunchAtLogin:
+    url: https://github.com/sindresorhus/LaunchAtLogin
+    from: 5.0.0
+  SwiftCSV:
+    url: https://github.com/swiftcsv/SwiftCSV
+    exactVersion: 0.7.1
+targets:
+  Work Hours:
+    type: application
+    platform: macOS
+    deploymentTarget: "11.0"
+    sources:
+      - Work Hours
+    info:
+      path: Info.plist
+      properties:
+        LSUIElement: true
+    settings:
+      CODE_SIGN_ENTITLEMENTS: Work Hours/WorkHours.entitlements
+    dependencies:
+      - package: AppUpdater
+      - package: Defaults
+      - package: LaunchAtLogin
+      - package: SwiftCSV
